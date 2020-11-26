@@ -1,7 +1,15 @@
 const cors = require("cors");
+const morgan = require("morgan");
 const express = require("express");
 const app = express();
 
+morgan.token("body", (request, response) => {
+  return JSON.stringify(request.body);
+});
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 app.use(express.json());
 app.use(cors());
 app.use(express.static("build"));
@@ -71,6 +79,20 @@ app.delete("/api/persons/:id", (request, response) => {
   persons = persons.filter((person) => person.id !== id);
 
   response.status(204).end();
+});
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+  const id = Number(request.params.id);
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+  (id, person, { new: true })
+    .then((changed) => {
+      response.json(changed.toJSON());
+    })
+    .catch((error) => next(error));
 });
 
 const idGen = () => {
