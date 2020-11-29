@@ -19,7 +19,6 @@ const Person = mongoose.model("Persons", personSchema);
 
 // Get all users from the database
 if (process.argv.length < 4) {
-  console.log("safda");
   Person.find({}).then((result) => {
     result.forEach((person) => {
       console.log(person);
