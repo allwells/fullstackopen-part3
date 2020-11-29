@@ -37,20 +37,19 @@ if (process.argv[3] === "all") {
 
 // Insert persons to database
 
-if (process.argv.length > 3 && process.argv.length === 4) {
+if (process.argv.length > 3) {
   const personName = process.argv[3];
   const personNumber = process.argv[4];
 
-  const person =
-    new Person({
-      name: personName,
-      number: personNumber,
-    }) &&
-    // Save entry to database
-    person.save().then((result) => {
-      console.log(`added ${person.name} number ${person.number} to phonebook`);
-      mongoose.connection.close();
-    });
+  const person = new Person({
+    name: personName,
+    number: personNumber,
+  });
+  // Save entry to database
+  person.save().then((result) => {
+    console.log(`added ${person.name} number ${person.number} to phonebook`);
+    mongoose.connection.close();
+  });
 }
 
 // Fix the add entry code....it suspends when user tries to make an entry
