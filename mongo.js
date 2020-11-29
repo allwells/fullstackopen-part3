@@ -19,7 +19,7 @@ const Person = mongoose.model("Persons", personSchema);
 
 // Get all users from the database
 
-if (process.argv.length === password) {
+if (process.argv[2] === password) {
   return Person.find({}).then((result) => {
     result.forEach((person) => {
       console.log(person);
