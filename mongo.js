@@ -1,12 +1,5 @@
 const mongoose = require("mongoose");
 
-if (process.argv.length < 3) {
-  console.log(
-    "Please provide the password as an argument: \nAdd entries: node mongo.js <password> <name> <number>\nGet all entries: node mongo.js <password> all"
-  );
-  process.exit(1);
-}
-
 const password = process.argv[2];
 
 const url = `mongodb+srv://fullstack:${password}@fso-cluster.9wjsr.mongodb.net/phonebook?retryWrites=true&w=majority`;
@@ -26,7 +19,7 @@ const Person = mongoose.model("Persons", personSchema);
 
 // Get all users from the database
 
-if (process.argv[3] === "all") {
+if (process.argv.length === password) {
   return Person.find({}).then((result) => {
     result.forEach((person) => {
       console.log(person);
@@ -41,13 +34,15 @@ if (process.argv.length > 3) {
   const personName = process.argv[3];
   const personNumber = process.argv[4];
 
-  const person = new Person({
+  const contactList = new Person({
     name: personName,
     number: personNumber,
   });
   // Save entry to database
-  person.save().then((result) => {
-    console.log(`added ${person.name} number ${person.number} to phonebook`);
+  contactList.save().then((result) => {
+    console.log(
+      `added ${contactList.name} number ${contactList.number} to phonebook`
+    );
     mongoose.connection.close();
   });
 }
