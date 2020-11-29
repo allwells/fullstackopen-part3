@@ -18,9 +18,9 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model("Persons", personSchema);
 
 // Get all users from the database
-
-if (process.argv[2] === password) {
-  return Person.find({}).then((result) => {
+if (process.argv.length < 4) {
+  console.log("safda");
+  Person.find({}).then((result) => {
     result.forEach((person) => {
       console.log(person);
     });
@@ -29,7 +29,6 @@ if (process.argv[2] === password) {
 }
 
 // Insert persons to database
-
 if (process.argv.length > 3) {
   const personName = process.argv[3];
   const personNumber = process.argv[4];
@@ -38,6 +37,7 @@ if (process.argv.length > 3) {
     name: personName,
     number: personNumber,
   });
+
   // Save entry to database
   contactList.save().then((result) => {
     console.log(
@@ -46,5 +46,3 @@ if (process.argv.length > 3) {
     mongoose.connection.close();
   });
 }
-
-// Fix the add entry code....it suspends when user tries to make an entry
