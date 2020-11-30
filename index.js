@@ -31,12 +31,14 @@ app.get("/api/persons", (request, response) => {
 });
 
 app.get("/info", (request, response) => {
-  const info = Number(persons.length);
   const date = new Date().toString();
-  response.send(`
-    <p>Phonebook has info for ${info} people</p>
+
+  Person.find({}).then((person) => {
+    response.send(`
+    <p>Phonebook has info for ${person.length} people</p>
     <p>${date}</p>
     `);
+  });
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
@@ -53,12 +55,16 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
 
-  Person.findByIdAndDelete(id).then((persons) => {
-    response.status(204).end();
-  });
+  Person.findByIdAndDelete(id)
+    .then((persons) => {
+      response.status(204).end();
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
@@ -81,7 +87,7 @@ const idGen = () => {
   return max + 1;
 };
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -95,9 +101,12 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  person.save().then((saved) => {
-    response.json(saved);
-  });
+  person
+    .save()
+    .then((saved) => {
+      response.json(saved);
+    })
+    .catch((error) => next(error));
 });
 
 const errorHandler = (error, request, response, next) => {
