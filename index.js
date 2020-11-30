@@ -30,15 +30,17 @@ app.get("/api/persons", (request, response) => {
   });
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
   const date = new Date().toString();
 
-  Person.find({}).then((person) => {
-    response.send(`
+  Person.find({})
+    .then((person) => {
+      response.send(`
     <p>Phonebook has info for ${person.length} people</p>
     <p>${date}</p>
     `);
-  });
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
@@ -80,12 +82,6 @@ app.put("/api/persons/:id", (request, response, next) => {
     })
     .catch((error) => next(error));
 });
-
-const idGen = () => {
-  const max =
-    persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
-  return max + 1;
-};
 
 app.post("/api/persons", (request, response, next) => {
   const body = request.body;
