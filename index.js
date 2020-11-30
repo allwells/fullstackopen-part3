@@ -48,20 +48,22 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== id);
+  const id = request.params.id;
+  // persons = persons.filter((person) => person.id !== id);
 
-  response.status(204).end();
+  Person.findByIdAndDelete(id).then((persons) => {
+    response.status(204).end();
+  });
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
   const body = request.body;
-  const id = Number(request.params.id);
+  const id = request.params.id;
   const person = {
     name: body.name,
     number: body.number,
   };
-  (id, person, { new: true })
+  Person.findByIdAndUpdate(id, person, { new: true })
     .then((changed) => {
       response.json(changed.toJSON());
     })
