@@ -99,9 +99,7 @@ app.post("/api/persons", (request, response, next) => {
 
   person
     .save()
-    .then((saved) => {
-      saved.toJSON();
-    })
+    .then((saved) => saved.toJSON())
     .then((formatted) => response.json(formatted))
     .catch((error) => next(error));
 });
