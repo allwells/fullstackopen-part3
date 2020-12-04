@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const mongooseUniqueValidator = require("mongoose-unique-validator");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const url = process.env.MONGODB_URI;
 
@@ -19,17 +21,11 @@ mongoose
   });
 
 const personSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    minlength: 4,
-    required: true,
-  },
-  number: {
-    type: String,
-    minlength: 8,
-    required: true,
-  },
+  name: { type: String, minlength: 4, required: true, unique: true },
+  number: { type: String, minlength: 8, required: true, unique: true },
 });
+
+personSchema.plugin(uniqueValidator);
 
 personSchema.set("toJSON", {
   transform: (document, returnedObj) => {
